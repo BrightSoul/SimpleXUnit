@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+      <Version>0.1</Version>
+    	<Description>Programmatically execute XUnit tests in a console application. Just type: SimpleXUnit.RunTests()</Description>
+    	<Authors>BrightSoul</Authors>
+    	<PackageProjectUrl>https://github.com/BrightSoul/SimpleXUnit</PackageProjectUrl>
+    	<IncludeSymbols>False</IncludeSymbols>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.utility" Version="2.2.0" />
+  </ItemGroup>
+</Project>
