@@ -1,4 +1,4 @@
-# SimpleXUnit v0.1
+# SimpleXUnit v0.1.0
 Runs XUnit tests in a .NET Core console application.
 
 ### Quick start
