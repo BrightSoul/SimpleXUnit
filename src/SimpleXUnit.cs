@@ -11,7 +11,7 @@ namespace SimpleXUnitRunner
     {
         private bool verbose;
         private readonly ManualResetEvent manualResetEvent = new ManualResetEvent(false);
-
+        private static readonly object lockObject = new Object();
         private readonly Lazy<AssemblyRunner> assemblyRunner;
         private readonly TextWriter textWriter;
         private SimpleXUnit(string assemblyPath, TextWriter textWriter, bool verbose)
@@ -46,47 +46,53 @@ namespace SimpleXUnitRunner
 
         protected virtual Action<TestFailedInfo> OnTestFailed => failedTestInfo =>
         {
-            var coloreOriginale = Console.ForegroundColor;
-            var sfondoOriginale = Console.BackgroundColor;
-            Console.ForegroundColor = sfondoOriginale;
-            Console.BackgroundColor = ConsoleColor.Red;
-            string nomeTest = MakeTestName(failedTestInfo);
-            textWriter.Write(nomeTest);
-            Console.BackgroundColor = sfondoOriginale;
-            Console.ForegroundColor = ConsoleColor.Red;
-            textWriter.WriteLine($" failed with a {failedTestInfo.ExceptionType.Split('.').Last()}");
-            textWriter.WriteLine("\t" + failedTestInfo.ExceptionMessage.Replace("\r", "").Replace("\n", "\n\t"));
-            Console.ForegroundColor = coloreOriginale;
+            lock(lockObject) {
+                var coloreOriginale = Console.ForegroundColor;
+                var sfondoOriginale = Console.BackgroundColor;
+                Console.ForegroundColor = sfondoOriginale;
+                Console.BackgroundColor = ConsoleColor.Red;
+                string nomeTest = MakeTestName(failedTestInfo);
+                textWriter.Write(nomeTest);
+                Console.BackgroundColor = sfondoOriginale;
+                Console.ForegroundColor = ConsoleColor.Red;
+                textWriter.WriteLine($" failed with a {failedTestInfo.ExceptionType.Split('.').Last()}");
+                textWriter.WriteLine("\t" + failedTestInfo.ExceptionMessage.Replace("\r", "").Replace("\n", "\n\t"));
+                Console.ForegroundColor = coloreOriginale;
+            }
         };
 
         protected virtual Action<TestPassedInfo> OnTestPassed => passedTestInfo =>
         {
             if (!verbose)
                 return;
-            var coloreOriginale = Console.ForegroundColor;
-            var sfondoOriginale = Console.BackgroundColor;
-            Console.ForegroundColor = sfondoOriginale;
-            Console.BackgroundColor = ConsoleColor.Green;
-            string nomeTest = MakeTestName(passedTestInfo);
-            textWriter.Write(nomeTest);
-            Console.BackgroundColor = sfondoOriginale;
-            Console.ForegroundColor = ConsoleColor.Green;
-            textWriter.WriteLine(" passed!");
-            Console.ForegroundColor = coloreOriginale;
+            lock (lockObject) {
+                var coloreOriginale = Console.ForegroundColor;
+                var sfondoOriginale = Console.BackgroundColor;
+                Console.ForegroundColor = sfondoOriginale;
+                Console.BackgroundColor = ConsoleColor.Green;
+                string nomeTest = MakeTestName(passedTestInfo);
+                textWriter.Write(nomeTest);
+                Console.BackgroundColor = sfondoOriginale;
+                Console.ForegroundColor = ConsoleColor.Green;
+                textWriter.WriteLine(" passed!");
+                Console.ForegroundColor = coloreOriginale;
+            }
         };
         protected virtual Action<TestSkippedInfo> OnTestSkipped => testSkippedInfo =>
         {
-            var coloreOriginale = Console.ForegroundColor;
-            var sfondoOriginale = Console.BackgroundColor;
-            Console.ForegroundColor = sfondoOriginale;
-            Console.BackgroundColor = ConsoleColor.DarkYellow;
-            string nomeTest = MakeTestName(testSkippedInfo);
-            textWriter.Write(nomeTest);
-            Console.BackgroundColor = sfondoOriginale;
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            textWriter.WriteLine($" skipped with reason: \"{testSkippedInfo.SkipReason}\"");
-            Console.BackgroundColor = sfondoOriginale;
-            Console.ForegroundColor = coloreOriginale;
+            lock (lockObject) {
+                var coloreOriginale = Console.ForegroundColor;
+                var sfondoOriginale = Console.BackgroundColor;
+                Console.ForegroundColor = sfondoOriginale;
+                Console.BackgroundColor = ConsoleColor.DarkYellow;
+                string nomeTest = MakeTestName(testSkippedInfo);
+                textWriter.Write(nomeTest);
+                Console.BackgroundColor = sfondoOriginale;
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                textWriter.WriteLine($" skipped with reason: \"{testSkippedInfo.SkipReason}\"");
+                Console.BackgroundColor = sfondoOriginale;
+                Console.ForegroundColor = coloreOriginale;
+            }
 
         };
 
@@ -123,7 +129,7 @@ namespace SimpleXUnitRunner
                 Console.ForegroundColor = coloreOriginale;
                 textWriter.WriteLine(".");
             }
-            textWriter.WriteLine($"Execution completed in {Math.Ceiling(executionInfo.ExecutionTime)}ms.");
+            textWriter.WriteLine($"Execution completed in {Math.Ceiling(executionInfo.ExecutionTime)}s.");
             textWriter.WriteLine();
             manualResetEvent.Set();
         };

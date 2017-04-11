@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-      <Version>0.1</Version>
+      <Version>0.2</Version>
     	<Description>Programmatically execute XUnit tests in a console application. Just type: SimpleXUnit.RunTests()</Description>
     	<Authors>BrightSoul</Authors>
     	<PackageProjectUrl>https://github.com/BrightSoul/SimpleXUnit</PackageProjectUrl>
