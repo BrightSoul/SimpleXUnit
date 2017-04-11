@@ -1,4 +1,4 @@
-# SimpleXUnit v0.1.0
+# SimpleXUnit v0.2.0
 Programmatically execute XUnit tests in a console application.
 
 ### Quick start
